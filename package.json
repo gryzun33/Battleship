@@ -11,6 +11,7 @@
   "keywords": [],
   "license": "ISC",
   "devDependencies": {
+    "@types/ws": "^8.5.12",
     "dotenv": "^16.4.5",
     "nodemon": "^2.0.22",
     "ts-loader": "^9.5.1",
