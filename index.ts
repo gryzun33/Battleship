@@ -2,6 +2,8 @@ import { httpServer } from './src/http_server/index';
 import { WebSocketServer } from 'ws';
 import { ParsedMessage } from './src/utils/types';
 import { handleRegistration } from './src/requestHandlers/handleRegistration';
+import { randomUUID } from 'crypto';
+import { clientManager } from './src/state/clientManager';
 
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
@@ -9,12 +11,12 @@ const WS_PORT = 3000;
 console.log(`Start static http server on the ${HTTP_PORT} port!`);
 httpServer.listen(HTTP_PORT);
 
-type MessageType = 'reg' | 'update_winners' | 'create_room';
-
 const wss = new WebSocketServer({ port: WS_PORT });
 
 wss.on('connection', (ws) => {
   console.log('ws connection');
+  const clientId = randomUUID();
+  clientManager.addClient(clientId, ws);
 
   ws.on('message', (message: string) => {
     console.log(`getMessage: ${message}`);
@@ -24,7 +26,7 @@ wss.on('connection', (ws) => {
     const { type, data } = parsedMessage;
     switch (type) {
       case 'reg':
-        handleRegistration(ws, data);
+        handleRegistration(ws, data, clientId);
         break;
 
       // case 'create_room':

@@ -2,17 +2,25 @@ import WebSocket from 'ws';
 import { PlayerAnswer, PlayerReg, Room, Winner } from '../utils/types';
 import { randomUUID } from 'crypto';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
+import { clientManager } from '../state/clientManager';
 
-export function handleRegistration(ws: WebSocket, data: string) {
+export function handleRegistration(
+  ws: WebSocket,
+  data: string,
+  clientId: string
+) {
   const parsedData = JSON.parse(data) as PlayerReg;
-  const userId = randomUUID();
+  clientManager.updateClient(clientId, {
+    name: parsedData.name,
+    password: parsedData.password,
+  });
 
   const responses: string[] = [];
 
   // response1
   const createdPlayer: PlayerAnswer = {
     name: parsedData.name,
-    index: userId,
+    index: clientId,
     error: false,
     errorText: '',
   };
