@@ -1,6 +1,7 @@
 import { httpServer } from './src/http_server/index';
 import { WebSocketServer } from 'ws';
 import { ParsedMessage } from './src/utils/types';
+import { handleRegistration } from './src/requestHandlers/handleRegistration';
 
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
@@ -18,26 +19,21 @@ wss.on('connection', (ws) => {
   ws.on('message', (message: string) => {
     console.log(`getMessage: ${message}`);
     const parsedMessage = JSON.parse(message) as ParsedMessage;
-    const data = JSON.parse(parsedMessage.data);
-    // switch (parsedMessage.type) {
-    //   case 'reg':
-    //     handleRegistration(ws, data);
-    //     break;
+    // const data = JSON.parse(parsedMessage.data);
 
-    //   case 'create_room':
-    //     handleUpdateWinners(ws, data);
-    //     break;
+    const { type, data } = parsedMessage;
+    switch (type) {
+      case 'reg':
+        handleRegistration(ws, data);
+        break;
 
-    //   default:
-    //     console.warn('Unknown message type:', parsedMessage.type);
-    //     ws.send(
-    //       JSON.stringify({
-    //         type: 'error',
-    //         data: { error: true, errorText: 'Unknown message type' },
-    //         id: 0,
-    //       })
-    //     );
-    // }
+      // case 'create_room':
+      //   handleUpdateWinners(ws, data);
+      //   break;
+
+      default:
+        console.warn('Unknown message type:', type);
+    }
   });
 
   ws.on('error', (error) => {
