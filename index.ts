@@ -2,6 +2,8 @@ import { httpServer } from './src/http_server/index';
 import { WebSocketServer } from 'ws';
 import { ParsedMessage } from './src/utils/types';
 import { handleRegistration } from './src/requestHandlers/handleRegistration';
+import { handleCreateRoom } from './src/requestHandlers/handleCreateRoom';
+
 import { randomUUID } from 'crypto';
 import { clientManager } from './src/state/clientManager';
 
@@ -16,12 +18,10 @@ const wss = new WebSocketServer({ port: WS_PORT });
 wss.on('connection', (ws) => {
   console.log('ws connection');
   const clientId = randomUUID();
-  clientManager.addClient(clientId, ws);
 
   ws.on('message', (message: string) => {
     console.log(`getMessage: ${message}`);
     const parsedMessage = JSON.parse(message) as ParsedMessage;
-    // const data = JSON.parse(parsedMessage.data);
 
     const { type, data } = parsedMessage;
     switch (type) {
@@ -29,9 +29,9 @@ wss.on('connection', (ws) => {
         handleRegistration(ws, data, clientId);
         break;
 
-      // case 'create_room':
-      //   handleUpdateWinners(ws, data);
-      //   break;
+      case 'create_room':
+        handleCreateRoom(ws, clientId);
+        break;
 
       default:
         console.warn('Unknown message type:', type);

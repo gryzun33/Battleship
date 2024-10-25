@@ -10,7 +10,8 @@ export function handleRegistration(
   clientId: string
 ) {
   const parsedData = JSON.parse(data) as PlayerReg;
-  clientManager.updateClient(clientId, {
+  clientManager.addClient(clientId, {
+    ws,
     name: parsedData.name,
     password: parsedData.password,
   });
@@ -36,10 +37,12 @@ export function handleRegistration(
   responses.push(responseWinners);
 
   // response3
-  const rooms: Room[] = [];
+  const rooms: Room[] = clientManager.getRooms();
   const roomsJSON = JSON.stringify(rooms);
   const responseRooms = getFormattedResponse('update_room', roomsJSON);
   responses.push(responseRooms);
 
+  // const sockets = clientManager.getAllSockets();
   responses.forEach((response) => ws.send(response));
+  console.log('clients=', clientManager.getAllClients());
 }

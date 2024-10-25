@@ -1,16 +1,28 @@
 import { WebSocket } from 'ws';
+import { Room, RoomUser } from '../utils/types';
 
 interface ClientData {
   ws: WebSocket;
-  name?: string;
-  password?: string | number;
+  name: string;
+  password: string | number;
 }
 
 class ClientManager {
   private clients: Map<string, ClientData> = new Map();
+  private roomsMap: Map<string, Room> = new Map();
 
-  public addClient(clientId: string, ws: WebSocket): void {
-    this.clients.set(clientId, { ws });
+  public createRoom(roomId: string, clientId: string) {
+    const userName = this.getName(clientId);
+    const room = {
+      roomId,
+      roomUsers: [{ name: userName, index: clientId }],
+    };
+    this.roomsMap.set(roomId, room);
+    return this.getRooms();
+  }
+
+  public addClient(clientId: string, data: ClientData): void {
+    this.clients.set(clientId, { ...data });
   }
 
   public getClient(clientId: string): ClientData | undefined {
@@ -30,6 +42,23 @@ class ClientManager {
 
   public getAllClients(): Map<string, ClientData> {
     return this.clients;
+  }
+
+  public getName(clientId: string): string {
+    const clientData = this.clients.get(clientId);
+    if (clientData && clientData.name) {
+      return clientData.name;
+    } else {
+      throw new Error('name is undefined');
+    }
+  }
+
+  public getRooms(): Room[] {
+    return Array.from(this.roomsMap.values());
+  }
+
+  public getAllSockets(): WebSocket[] {
+    return Array.from(this.clients.values()).map((client) => client.ws);
   }
 }
 
