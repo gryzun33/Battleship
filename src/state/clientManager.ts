@@ -6,6 +6,7 @@ interface ClientData {
   name: string;
   // password: string;
   roomId?: string;
+  gameId?: string;
 }
 
 class StateManager {
