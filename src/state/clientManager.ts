@@ -1,5 +1,13 @@
 import { WebSocket } from 'ws';
-import { Room, ShipsInitialData, GameSession, PlayerReg } from '../utils/types';
+import {
+  Room,
+  ShipsInitialData,
+  GameSession,
+  PlayerReg,
+  ShipCoord,
+  // Board,
+  // ShipsCoord,
+} from '../utils/types';
 
 interface ClientData {
   ws: WebSocket;
@@ -7,6 +15,8 @@ interface ClientData {
   // password: string;
   roomId?: string;
   gameId?: string;
+  // board?: Board;
+  shipsCoord?: ShipCoord[];
 }
 
 class StateManager {

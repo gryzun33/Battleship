@@ -7,7 +7,8 @@ export type MessageType =
   | 'create_game'
   | 'add_ships'
   | 'start_game'
-  | 'turn';
+  | 'turn'
+  | 'attack';
 
 export type PlayerReg = {
   name: string;
@@ -76,3 +77,46 @@ export type ShipsInitialData = {
   ships: Ship[];
   indexPlayer: string;
 };
+
+export type AttackRequest = {
+  gameId: string;
+  x: number;
+  y: number;
+  indexPlayer: string;
+};
+
+export type AttackFeedback = {
+  position: {
+    x: number;
+    y: number;
+  };
+  currentPlayer: number | string;
+  status: 'miss' | 'killed' | 'shot';
+};
+
+export type Hit = {
+  x: number;
+  y: number;
+};
+
+export type Coord = { x: number; y: number; isHit: boolean };
+
+export type ShipCoord = {
+  positions: Coord[];
+};
+
+// export type Cell = 'empty' | 'ship' | 'shot' | 'miss' | 'killed';
+
+// export type Cell = {
+//   status: CellStatus;
+// };
+
+// export type Coord = {
+//   x: number;
+//   y: number;
+//   status: Cell;
+// };
+
+// export type Board = Cell[][];
+
+// export type ShipsCoord = Coord[][];

@@ -7,6 +7,7 @@ import { handleRegistration } from './src/requestHandlers/handleRegistration';
 import { handleCreateRoom } from './src/requestHandlers/handleCreateRoom';
 import { handleAddUserToRoom } from './src/requestHandlers/handleAddUserToRoom';
 import { handleAddShips } from './src/requestHandlers/handleAddShips';
+import { handleAttack } from './src/requestHandlers/handleAttack';
 
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
@@ -30,7 +31,6 @@ wss.on('connection', (ws) => {
       case 'reg':
         handleRegistration(ws, data, clientId);
         break;
-
       case 'create_room':
         handleCreateRoom(clientId);
         break;
@@ -39,6 +39,9 @@ wss.on('connection', (ws) => {
         break;
       case 'add_ships':
         handleAddShips(ws, data, clientId);
+        break;
+      case 'attack':
+        handleAttack(ws, data, clientId);
         break;
 
       default:
