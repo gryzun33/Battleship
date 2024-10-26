@@ -1,5 +1,5 @@
 import { WebSocket } from 'ws';
-import { Room, RoomUser } from '../utils/types';
+import { Room, PlayerData, GameSession } from '../utils/types';
 
 interface ClientData {
   ws: WebSocket;
@@ -7,9 +7,11 @@ interface ClientData {
   password: string | number;
 }
 
-class ClientManager {
+class StateManager {
   private clients: Map<string, ClientData> = new Map();
   private roomsMap: Map<string, Room> = new Map();
+
+  private games: Map<string, GameSession> = new Map();
 
   public createRoom(roomId: string, clientId: string) {
     const userName = this.getName(clientId);
@@ -83,6 +85,20 @@ class ClientManager {
   public removeRoom(roomId: string): void {
     this.roomsMap.delete(roomId);
   }
+
+  public addPlayerToGame(
+    gameId: string,
+    clientId: string,
+    playerData: PlayerData
+  ) {
+    let game = this.games.get(gameId);
+    if (!game) {
+      game = { players: new Map(), currentPlayer: clientId };
+      this.games.set(gameId, game);
+    }
+    game.players.set(clientId, playerData);
+    return game.players.size;
+  }
 }
 
-export const clientManager = new ClientManager();
+export const stateManager = new StateManager();

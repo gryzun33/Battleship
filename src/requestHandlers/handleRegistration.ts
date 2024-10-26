@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import { PlayerAnswer, PlayerReg, Room, Winner } from '../utils/types';
 import { randomUUID } from 'crypto';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
-import { clientManager } from '../state/clientManager';
+import { stateManager } from '../state/clientManager';
 
 export function handleRegistration(
   ws: WebSocket,
@@ -10,7 +10,7 @@ export function handleRegistration(
   clientId: string
 ) {
   const parsedData = JSON.parse(data) as PlayerReg;
-  clientManager.addClient(clientId, {
+  stateManager.addClient(clientId, {
     ws,
     name: parsedData.name,
     password: parsedData.password,
@@ -37,12 +37,12 @@ export function handleRegistration(
   responses.push(responseWinners);
 
   // response3
-  const rooms: Room[] = clientManager.getRooms();
+  const rooms: Room[] = stateManager.getRooms();
   const roomsJSON = JSON.stringify(rooms);
   const responseRooms = getFormattedResponse('update_room', roomsJSON);
   responses.push(responseRooms);
 
   // const sockets = clientManager.getAllSockets();
   responses.forEach((response) => ws.send(response));
-  console.log('clients=', clientManager.getAllClients());
+  console.log('clients=', stateManager.getAllClients());
 }

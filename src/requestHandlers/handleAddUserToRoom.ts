@@ -2,7 +2,7 @@ import WebSocket from 'ws';
 import { PlayerAnswer, GameResponse, RoomRequest, Room } from '../utils/types';
 import { randomUUID } from 'crypto';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
-import { clientManager } from '../state/clientManager';
+import { stateManager } from '../state/clientManager';
 
 export function handleAddUserToRoom(
   ws: WebSocket,
@@ -10,19 +10,19 @@ export function handleAddUserToRoom(
   clientId: string
 ) {
   const { indexRoom } = JSON.parse(data) as RoomRequest;
-  const clientIdInRoom = clientManager.getClientInRoom(indexRoom);
+  const clientIdInRoom = stateManager.getClientInRoom(indexRoom);
 
   if (clientIdInRoom === clientId) {
     return;
   }
-  const wsInRoom = clientManager.getWebSocket(clientIdInRoom);
-  clientManager.removeRoom(indexRoom);
+  const wsInRoom = stateManager.getWebSocket(clientIdInRoom);
+  stateManager.removeRoom(indexRoom);
 
   // response1
-  const rooms: Room[] = clientManager.getRooms();
+  const rooms: Room[] = stateManager.getRooms();
   const roomsJSON = JSON.stringify(rooms);
   const response = getFormattedResponse('update_room', roomsJSON);
-  const sockets = clientManager.getAllSockets();
+  const sockets = stateManager.getAllSockets();
   sockets.forEach((ws) => ws.send(response));
 
   // createGame

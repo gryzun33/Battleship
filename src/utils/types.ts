@@ -47,3 +47,23 @@ export type GameResponse = {
   idGame: string;
   idPlayer: string;
 };
+
+export type Ship = {
+  position: {
+    x: number;
+    y: number;
+  };
+  direction: boolean;
+  length: number;
+  type: 'small' | 'medium' | 'large' | 'huge';
+};
+
+export type PlayerData = {
+  ships: Ship[];
+  indexPlayer: string;
+};
+
+export type GameSession = {
+  players: Map<string, PlayerData>;
+  currentPlayer: string;
+};
