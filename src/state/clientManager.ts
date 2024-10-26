@@ -1,5 +1,5 @@
 import { WebSocket } from 'ws';
-import { Room, PlayerData, GameSession } from '../utils/types';
+import { Room, ShipsInitialData, GameSession } from '../utils/types';
 
 interface ClientData {
   ws: WebSocket;
@@ -86,18 +86,26 @@ class StateManager {
     this.roomsMap.delete(roomId);
   }
 
-  public addPlayerToGame(
-    gameId: string,
-    clientId: string,
-    playerData: PlayerData
-  ) {
+  public addPlayerToGame({
+    gameId,
+    ships,
+    indexPlayer,
+  }: ShipsInitialData): number {
     let game = this.games.get(gameId);
     if (!game) {
-      game = { players: new Map(), currentPlayer: clientId };
+      game = { players: new Map(), currentPlayer: indexPlayer };
       this.games.set(gameId, game);
     }
-    game.players.set(clientId, playerData);
+    game.players.set(indexPlayer, { ships, indexPlayer });
     return game.players.size;
+  }
+
+  public getPlayersData(gameId: string): GameSession {
+    let game = this.games.get(gameId);
+    if (!game) {
+      throw new Error(`Game with such id is not found`);
+    }
+    return game;
   }
 }
 

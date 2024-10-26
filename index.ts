@@ -6,6 +6,7 @@ import { stateManager } from './src/state/clientManager';
 import { handleRegistration } from './src/requestHandlers/handleRegistration';
 import { handleCreateRoom } from './src/requestHandlers/handleCreateRoom';
 import { handleAddUserToRoom } from './src/requestHandlers/handleAddUserToRoom';
+import { handleAddShips } from './src/requestHandlers/handleAddShips';
 
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
@@ -34,6 +35,9 @@ wss.on('connection', (ws) => {
         break;
       case 'add_user_to_room':
         handleAddUserToRoom(ws, data, clientId);
+        break;
+      case 'add_ships':
+        handleAddShips(ws, data, clientId);
         break;
 
       default:

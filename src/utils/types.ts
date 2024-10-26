@@ -4,7 +4,8 @@ export type MessageType =
   | 'create_room'
   | 'update_room'
   | 'add_user_to_room'
-  | 'create_game';
+  | 'create_game'
+  | 'add_ships';
 
 export type PlayerReg = {
   name: string;
@@ -66,4 +67,10 @@ export type PlayerData = {
 export type GameSession = {
   players: Map<string, PlayerData>;
   currentPlayer: string;
+};
+
+export type ShipsInitialData = {
+  gameId: string;
+  ships: Ship[];
+  indexPlayer: string;
 };
