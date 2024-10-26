@@ -29,10 +29,9 @@ export function handleRegistration(
   stateManager.addClient(clientId, {
     ws,
     name: parsedData.name,
-    // password: parsedData.password,
   });
 
-  const responses: string[] = [];
+  const sockets = stateManager.getAllSockets();
 
   // response1
   const createdPlayer: PlayerAnswer = {
@@ -44,21 +43,17 @@ export function handleRegistration(
 
   const createdPlayerJSON = JSON.stringify(createdPlayer);
   const responseReg = getFormattedResponse('reg', createdPlayerJSON);
-  responses.push(responseReg);
+  ws.send(responseReg);
 
   // response2
   const winners: Winner[] = [];
   const winnersJSON = JSON.stringify(winners);
   const responseWinners = getFormattedResponse('update_winners', winnersJSON);
-  responses.push(responseWinners);
+  sockets.forEach((ws) => ws.send(responseWinners));
 
   // response3
   const rooms: Room[] = stateManager.getRooms();
   const roomsJSON = JSON.stringify(rooms);
   const responseRooms = getFormattedResponse('update_room', roomsJSON);
-  responses.push(responseRooms);
-
-  // const sockets = clientManager.getAllSockets();
-  responses.forEach((response) => ws.send(response));
-  console.log('clients=', stateManager.getAllClients());
+  sockets.forEach((ws) => ws.send(responseRooms));
 }
