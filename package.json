@@ -4,7 +4,7 @@
   "description": "Template for the WebSocket remote control task",
   "main": "index.js",
   "scripts": {
-    "start:dev": "nodemon --exec ts-node index.ts",
+    "start": "nodemon --exec ts-node index.ts",
     "start:prod": "webpack --config webpack.config.mjs && node ./dist/bundle.js"
   },
   "author": "Andrei Auchynnikau",
