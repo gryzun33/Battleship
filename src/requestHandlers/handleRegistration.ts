@@ -10,10 +10,26 @@ export function handleRegistration(
   clientId: string
 ) {
   const parsedData = JSON.parse(data) as PlayerReg;
+
+  const isLoginSuccess = stateManager.login(parsedData);
+  if (!isLoginSuccess) {
+    const createdPlayer: PlayerAnswer = {
+      name: parsedData.name,
+      index: clientId,
+      error: true,
+      errorText: 'Invalid password',
+    };
+
+    const createdPlayerJSON = JSON.stringify(createdPlayer);
+    const responseReg = getFormattedResponse('reg', createdPlayerJSON);
+    ws.send(responseReg);
+    return;
+  }
+
   stateManager.addClient(clientId, {
     ws,
     name: parsedData.name,
-    password: parsedData.password,
+    // password: parsedData.password,
   });
 
   const responses: string[] = [];

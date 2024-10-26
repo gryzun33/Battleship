@@ -1,18 +1,34 @@
 import { WebSocket } from 'ws';
-import { Room, ShipsInitialData, GameSession } from '../utils/types';
+import { Room, ShipsInitialData, GameSession, PlayerReg } from '../utils/types';
 
 interface ClientData {
   ws: WebSocket;
   name: string;
-  password: string | number;
+  // password: string;
   roomId?: string;
 }
 
 class StateManager {
+  private users: Map<string, string> = new Map();
   private clients: Map<string, ClientData> = new Map();
   private roomsMap: Map<string, Room> = new Map();
 
   private games: Map<string, GameSession> = new Map();
+
+  public login(data: PlayerReg): boolean {
+    const isExist = this.users.has(data.name);
+    if (isExist) {
+      const storedPassword = this.users.get(data.name);
+      if (storedPassword === data.password) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      this.users.set(data.name, data.password);
+      return true;
+    }
+  }
 
   public createRoom(roomId: string, clientId: string) {
     const userName = this.getName(clientId);
