@@ -4,9 +4,16 @@ import { randomUUID } from 'crypto';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
 import { stateManager } from '../state/clientManager';
 
-export function handleCreateRoom(ws: WebSocket, clientId: string) {
-  const roomId = randomUUID();
-  const rooms = stateManager.createRoom(roomId, clientId);
+export function handleCreateRoom(clientId: string) {
+  const { roomId } = stateManager.getClient(clientId);
+
+  if (roomId) {
+    console.log(`Player can create only one room`);
+    return;
+  }
+
+  const newRoomId = randomUUID();
+  const rooms = stateManager.createRoom(newRoomId, clientId);
 
   // const filteredRooms = rooms.filter((room) => {
   //   return !room.roomUsers.some((user) => user.index === clientId);

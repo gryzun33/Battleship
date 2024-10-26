@@ -5,7 +5,9 @@ export type MessageType =
   | 'update_room'
   | 'add_user_to_room'
   | 'create_game'
-  | 'add_ships';
+  | 'add_ships'
+  | 'start_game'
+  | 'turn';
 
 export type PlayerReg = {
   name: string;

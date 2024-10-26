@@ -13,6 +13,7 @@ export function handleAddUserToRoom(
   const clientIdInRoom = stateManager.getClientInRoom(indexRoom);
 
   if (clientIdInRoom === clientId) {
+    console.log(`Player is in room already`);
     return;
   }
   const wsInRoom = stateManager.getWebSocket(clientIdInRoom);

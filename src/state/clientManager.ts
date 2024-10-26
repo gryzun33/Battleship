@@ -5,6 +5,7 @@ interface ClientData {
   ws: WebSocket;
   name: string;
   password: string | number;
+  roomId?: string;
 }
 
 class StateManager {
@@ -20,6 +21,7 @@ class StateManager {
       roomUsers: [{ name: userName, index: clientId }],
     };
     this.roomsMap.set(roomId, room);
+    this.updateClient(clientId, { roomId });
     return this.getRooms();
   }
 
@@ -27,8 +29,12 @@ class StateManager {
     this.clients.set(clientId, { ...data });
   }
 
-  public getClient(clientId: string): ClientData | undefined {
-    return this.clients.get(clientId);
+  public getClient(clientId: string): ClientData {
+    const client = this.clients.get(clientId);
+    if (!client) {
+      throw new Error('client is not found');
+    }
+    return client;
   }
 
   public getWebSocket(clientId: string): WebSocket {
@@ -100,7 +106,7 @@ class StateManager {
     return game.players.size;
   }
 
-  public getPlayersData(gameId: string): GameSession {
+  public getGameData(gameId: string): GameSession {
     let game = this.games.get(gameId);
     if (!game) {
       throw new Error(`Game with such id is not found`);

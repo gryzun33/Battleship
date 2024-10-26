@@ -31,7 +31,7 @@ wss.on('connection', (ws) => {
         break;
 
       case 'create_room':
-        handleCreateRoom(ws, clientId);
+        handleCreateRoom(clientId);
         break;
       case 'add_user_to_room':
         handleAddUserToRoom(ws, data, clientId);
