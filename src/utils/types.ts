@@ -2,16 +2,22 @@ export type MessageType =
   | 'reg'
   | 'update_winners'
   | 'create_room'
-  | 'update_room';
+  | 'update_room'
+  | 'add_user_to_room'
+  | 'create_game';
 
 export type PlayerReg = {
   name: string;
   password: string;
 };
 
+export type RoomRequest = {
+  indexRoom: string;
+};
+
 export type PlayerAnswer = {
   name: string;
-  index: number | string;
+  index: string;
   error: boolean;
   errorText: string;
 };
@@ -28,11 +34,16 @@ export type Winner = {
 };
 
 export type Room = {
-  roomId: number | string;
+  roomId: string;
   roomUsers: RoomUser[];
 };
 
 export type RoomUser = {
   name: string;
-  index: number | string;
+  index: string;
+};
+
+export type GameResponse = {
+  idGame: string;
+  idPlayer: string;
 };

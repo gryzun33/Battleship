@@ -1,11 +1,11 @@
 import { httpServer } from './src/http_server/index';
 import { WebSocketServer } from 'ws';
 import { ParsedMessage } from './src/utils/types';
-import { handleRegistration } from './src/requestHandlers/handleRegistration';
-import { handleCreateRoom } from './src/requestHandlers/handleCreateRoom';
-
 import { randomUUID } from 'crypto';
 import { clientManager } from './src/state/clientManager';
+import { handleRegistration } from './src/requestHandlers/handleRegistration';
+import { handleCreateRoom } from './src/requestHandlers/handleCreateRoom';
+import { handleAddUserToRoom } from './src/requestHandlers/handleAddUserToRoom';
 
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
@@ -31,6 +31,9 @@ wss.on('connection', (ws) => {
 
       case 'create_room':
         handleCreateRoom(ws, clientId);
+        break;
+      case 'add_user_to_room':
+        handleAddUserToRoom(ws, data, clientId);
         break;
 
       default:
