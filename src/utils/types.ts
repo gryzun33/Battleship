@@ -8,7 +8,8 @@ export type MessageType =
   | 'add_ships'
   | 'start_game'
   | 'turn'
-  | 'attack';
+  | 'attack'
+  | 'finish';
 
 export type PlayerReg = {
   name: string;

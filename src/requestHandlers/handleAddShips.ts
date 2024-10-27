@@ -22,11 +22,6 @@ export function handleAddShips(ws: WebSocket, data: string, clientId: string) {
   const shipsCoord = getShipPositions(shipsData.ships);
   stateManager.updateClient(clientId, { shipsCoord });
 
-  // const { board, shipsCoord } = getBoard(shipsData.ships, BOARD_SIZE);
-  // stateManager.updateClient(clientId, { board, shipsCoord });
-
-  // console.log('board=', board);
-
   const playersCount = stateManager.addPlayerToGame(shipsData);
   if (playersCount < 2) {
     return;

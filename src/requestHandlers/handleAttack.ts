@@ -11,6 +11,7 @@ import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
 import { stateManager } from '../state/clientManager';
 import { getOpponentData } from '../utils/helpers/getOpponentData';
 import { checkHit } from '../utils/helpers/checkHit';
+import { sendFinish } from '../responses/finish';
 
 export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   const attackData = JSON.parse(data) as AttackRequest;
@@ -22,20 +23,28 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   const opponentId = anotherPlayer.indexPlayer;
   const { ws: opponentWs } = stateManager.getClient(opponentId);
 
-  const { missed, shoted, killed, isCellAvailable } = checkHit(
+  const isCellnotHit = stateManager.checkCell(
     opponentId,
     attackData.x,
     attackData.y
   );
 
-  if (!isCellAvailable) {
+  if (!isCellnotHit) {
     console.warn(`This cell is not available`);
     const turnResponseJSON = JSON.stringify({ currentPlayer: clientId });
     const response = getFormattedResponse('turn', turnResponseJSON);
     ws.send(response);
     opponentWs.send(response);
     return;
+  } else {
+    stateManager.updateCell(opponentId, attackData.x, attackData.y);
   }
+
+  const { missed, shoted, killed, isGameOver } = checkHit(
+    opponentId,
+    attackData.x,
+    attackData.y
+  );
 
   const responsesAttack: AttackFeedback[] = [];
 
@@ -94,4 +103,8 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   const response = getFormattedResponse('turn', turnResponseJSON);
   ws.send(response);
   opponentWs.send(response);
+
+  if (isGameOver) {
+    sendFinish(clientId, opponentId, ws, opponentWs);
+  }
 }

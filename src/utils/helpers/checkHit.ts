@@ -3,23 +3,23 @@ import { Coord, Hit } from '../types';
 import { BOARD_SIZE } from '../constants';
 
 export function checkHit(opponentId: string, xHit: number, yHit: number) {
-  let isCellAvailable = true;
+  // let isCellAvailable = true;
   const { shipsCoord } = stateManager.getClient(opponentId);
   if (!shipsCoord) {
     throw new Error('No ships data available for the opponent.');
   }
 
-  const isCellnotHit = stateManager.checkCell(opponentId, xHit, yHit);
-  if (!isCellnotHit) {
-    // console.warn(`This cell is not available`);
-    isCellAvailable = false;
-  } else {
-    stateManager.updateCell(opponentId, xHit, yHit);
-  }
+  // const isCellnotHit = stateManager.checkCell(opponentId, xHit, yHit);
+  // if (!isCellnotHit) {
+  //   isCellAvailable = false;
+  // } else {
+  //   stateManager.updateCell(opponentId, xHit, yHit);
+  // }
 
   const missed: Hit[] = [];
   const shoted: Hit[] = [];
   let killed: Hit[] = [];
+  let isGameOver = false;
 
   outer: for (let i = 0; i < shipsCoord.length; i++) {
     const ship = shipsCoord[i];
@@ -77,11 +77,19 @@ export function checkHit(opponentId: string, xHit: number, yHit: number) {
         }
       }
     }
+
+    const allShipsKilled = shipsCoord.every((ship) =>
+      ship.positions.every((pos: Coord) => pos.isHit)
+    );
+
+    if (allShipsKilled) {
+      isGameOver = true;
+    }
   }
 
   if (killed.length === 0 && shoted.length === 0) {
     missed.push({ x: xHit, y: yHit });
   }
 
-  return { missed, shoted, killed, isCellAvailable };
+  return { missed, shoted, killed, isGameOver };
 }
