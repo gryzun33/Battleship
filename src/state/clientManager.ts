@@ -6,12 +6,12 @@ import {
   PlayerReg,
   ShipCoord,
   Board,
+  Coord,
 } from '../utils/types';
 
 interface ClientData {
   ws: WebSocket;
   name: string;
-  // password: string;
   roomId?: string;
   gameId?: string;
   board: Board;
@@ -137,6 +137,32 @@ class StateManager {
       throw new Error(`Game with such id is not found`);
     }
     return game;
+  }
+
+  public checkCell(clientId: string, x: number, y: number): boolean {
+    const client = this.clients.get(clientId);
+    if (!client || !client.board) {
+      throw new Error('Client or board not found');
+    }
+    const cellKey = `${x}${y}`;
+    const isHit = client.board.get(cellKey);
+    if (isHit === undefined) {
+      throw new Error('Cell not found');
+    }
+    return isHit;
+  }
+
+  public updateCell(clientId: string, x: number, y: number): void {
+    const client = this.clients.get(clientId);
+    if (!client || !client.board) {
+      throw new Error('Client or board not found');
+    }
+    const cellKey = `${x}${y}`;
+    if (client.board.has(cellKey)) {
+      client.board.set(cellKey, false);
+    } else {
+      throw new Error('Cell not found on the board');
+    }
   }
 }
 

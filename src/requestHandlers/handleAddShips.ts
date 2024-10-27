@@ -9,7 +9,7 @@ import {
 import { randomUUID } from 'crypto';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
 import { stateManager } from '../state/clientManager';
-import { getShipPositions } from '../utils/helpers/getBoard';
+import { getShipPositions } from '../utils/helpers/getShipPositions';
 // import { getBoard } from '../utils/helpers/getBoard';
 
 const BOARD_SIZE = 10;

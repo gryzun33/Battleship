@@ -3,9 +3,18 @@ import { Coord, Hit } from '../types';
 import { BOARD_SIZE } from '../constants';
 
 export function checkHit(opponentId: string, xHit: number, yHit: number) {
+  let isCellAvailable = true;
   const { shipsCoord } = stateManager.getClient(opponentId);
   if (!shipsCoord) {
     throw new Error('No ships data available for the opponent.');
+  }
+
+  const isCellnotHit = stateManager.checkCell(opponentId, xHit, yHit);
+  if (!isCellnotHit) {
+    // console.warn(`This cell is not available`);
+    isCellAvailable = false;
+  } else {
+    stateManager.updateCell(opponentId, xHit, yHit);
   }
 
   const missed: Hit[] = [];
@@ -63,6 +72,7 @@ export function checkHit(opponentId: string, xHit: number, yHit: number) {
             )
           ) {
             missed.push({ ...coord });
+            stateManager.updateCell(opponentId, coord.x, coord.y);
           }
         }
       }
@@ -73,5 +83,5 @@ export function checkHit(opponentId: string, xHit: number, yHit: number) {
     missed.push({ x: xHit, y: yHit });
   }
 
-  return { missed, shoted, killed };
+  return { missed, shoted, killed, isCellAvailable };
 }

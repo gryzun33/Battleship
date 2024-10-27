@@ -21,11 +21,21 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   }
   const opponentId = anotherPlayer.indexPlayer;
   const { ws: opponentWs } = stateManager.getClient(opponentId);
-  const { missed, shoted, killed } = checkHit(
+
+  const { missed, shoted, killed, isCellAvailable } = checkHit(
     opponentId,
     attackData.x,
     attackData.y
   );
+
+  if (!isCellAvailable) {
+    console.warn(`This cell is not available`);
+    const turnResponseJSON = JSON.stringify({ currentPlayer: clientId });
+    const response = getFormattedResponse('turn', turnResponseJSON);
+    ws.send(response);
+    opponentWs.send(response);
+    return;
+  }
 
   const responsesAttack: AttackFeedback[] = [];
 

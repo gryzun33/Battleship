@@ -105,18 +105,4 @@ export type ShipCoord = {
   positions: Coord[];
 };
 
-// export type Cell = 'empty' | 'ship' | 'shot' | 'miss' | 'killed';
-
-// export type Cell = {
-//   status: CellStatus;
-// };
-
-// export type Coord = {
-//   x: number;
-//   y: number;
-//   status: Cell;
-// };
-
-// export type Board = Cell[][];
-
-// export type ShipsCoord = Coord[][];
+export type Board = Map<string, boolean>;
