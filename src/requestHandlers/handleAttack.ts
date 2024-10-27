@@ -1,5 +1,11 @@
 import WebSocket from 'ws';
-import { AttackRequest, RoomRequest, Room } from '../utils/types';
+import {
+  AttackRequest,
+  RoomRequest,
+  Room,
+  Hit,
+  AttackFeedback,
+} from '../utils/types';
 import { randomUUID } from 'crypto';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
 import { stateManager } from '../state/clientManager';
@@ -15,30 +21,67 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   }
   const opponentId = anotherPlayer.indexPlayer;
   const { ws: opponentWs } = stateManager.getClient(opponentId);
-  const result = checkHit(opponentId, attackData.x, attackData.y);
+  const { missed, shoted, killed } = checkHit(
+    opponentId,
+    attackData.x,
+    attackData.y
+  );
 
-  // response1
-  if (result === 'miss' || 'shot') {
-    const responseData = {
+  const responsesAttack: AttackFeedback[] = [];
+
+  killed.forEach((hit: Hit) => {
+    const responseData: AttackFeedback = {
       position: {
-        x: attackData.x,
-        y: attackData.y,
+        x: hit.x,
+        y: hit.y,
       },
       currentPlayer: clientId,
-      status: result,
+      status: 'killed',
     };
 
-    const responseJSON = JSON.stringify(responseData);
+    responsesAttack.push(responseData);
+  });
+
+  missed.forEach((hit: Hit) => {
+    const responseData: AttackFeedback = {
+      position: {
+        x: hit.x,
+        y: hit.y,
+      },
+      currentPlayer: clientId,
+      status: 'miss',
+    };
+    responsesAttack.push(responseData);
+  });
+
+  shoted.forEach((hit: Hit) => {
+    const responseData: AttackFeedback = {
+      position: {
+        x: hit.x,
+        y: hit.y,
+      },
+      currentPlayer: clientId,
+      status: 'shot',
+    };
+    responsesAttack.push(responseData);
+  });
+
+  responsesAttack.forEach((resp: AttackFeedback) => {
+    const responseJSON = JSON.stringify(resp);
     const response = getFormattedResponse('attack', responseJSON);
     ws.send(response);
     opponentWs.send(response);
+  });
+
+  const turnData = { currentPlayer: '' };
+  if (killed.length || shoted.length) {
+    turnData.currentPlayer = clientId;
+  } else {
+    turnData.currentPlayer = opponentId;
   }
 
-  // console.log('result=', result);
-
-  // console.log('ATTACK');
-  // console.log('X=', attackData.x);
-  // console.log('Y=', attackData.y);
-  // console.log('clientId=', clientId);
-  // console.log('currentPlayer=', attackData.indexPlayer);
+  const turnResponseJSON = JSON.stringify(turnData);
+  const response = getFormattedResponse('turn', turnResponseJSON);
+  ws.send(response);
+  opponentWs.send(response);
 }

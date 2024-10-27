@@ -5,8 +5,7 @@ import {
   GameSession,
   PlayerReg,
   ShipCoord,
-  // Board,
-  // ShipsCoord,
+  Board,
 } from '../utils/types';
 
 interface ClientData {
@@ -15,7 +14,7 @@ interface ClientData {
   // password: string;
   roomId?: string;
   gameId?: string;
-  // board?: Board;
+  board: Board;
   shipsCoord?: ShipCoord[];
 }
 
@@ -23,7 +22,6 @@ class StateManager {
   private users: Map<string, string> = new Map();
   private clients: Map<string, ClientData> = new Map();
   private roomsMap: Map<string, Room> = new Map();
-
   private games: Map<string, GameSession> = new Map();
 
   public login(data: PlayerReg): boolean {

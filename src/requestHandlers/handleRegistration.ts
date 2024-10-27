@@ -3,6 +3,8 @@ import { PlayerAnswer, PlayerReg, Room, Winner } from '../utils/types';
 import { randomUUID } from 'crypto';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
 import { stateManager } from '../state/clientManager';
+import { createBoard } from '../utils/helpers/createBoard';
+import { BOARD_SIZE } from '../utils/constants';
 
 export function handleRegistration(
   ws: WebSocket,
@@ -29,6 +31,7 @@ export function handleRegistration(
   stateManager.addClient(clientId, {
     ws,
     name: parsedData.name,
+    board: createBoard(BOARD_SIZE),
   });
 
   const sockets = stateManager.getAllSockets();

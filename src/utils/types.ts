@@ -90,7 +90,7 @@ export type AttackFeedback = {
     x: number;
     y: number;
   };
-  currentPlayer: number | string;
+  currentPlayer: string;
   status: 'miss' | 'killed' | 'shot';
 };
 
