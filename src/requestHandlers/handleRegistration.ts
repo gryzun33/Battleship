@@ -1,12 +1,5 @@
 import WebSocket from 'ws';
-import {
-  PlayerAnswer,
-  PlayerReg,
-  Room,
-  Winner,
-  WinnersData,
-} from '../utils/types';
-import { randomUUID } from 'crypto';
+import { PlayerAnswer, PlayerReg, Room, WinnersData } from '../utils/types';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
 import { stateManager } from '../state/clientManager';
 import { createBoard } from '../utils/helpers/createBoard';

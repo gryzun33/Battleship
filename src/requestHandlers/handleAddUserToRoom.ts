@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import { PlayerAnswer, GameResponse, RoomRequest, Room } from '../utils/types';
+import { GameResponse, RoomRequest, Room } from '../utils/types';
 import { randomUUID } from 'crypto';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
 import { stateManager } from '../state/clientManager';
@@ -13,7 +13,7 @@ export function handleAddUserToRoom(
   const clientIdInRoom = stateManager.getClientInRoom(indexRoom);
 
   if (clientIdInRoom === clientId) {
-    console.log(`Player is in room already`);
+    console.warn(`Player is in room already`);
     return;
   }
 

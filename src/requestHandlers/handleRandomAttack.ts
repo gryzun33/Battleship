@@ -1,13 +1,5 @@
 import WebSocket from 'ws';
-import {
-  AttackRequest,
-  RoomRequest,
-  Room,
-  Hit,
-  AttackFeedback,
-  AttackRandom,
-} from '../utils/types';
-import { randomUUID } from 'crypto';
+import { Hit, AttackFeedback, AttackRandom } from '../utils/types';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
 import { stateManager } from '../state/clientManager';
 import { getOpponentData } from '../utils/helpers/getOpponentData';
@@ -32,8 +24,6 @@ export function handleRandomAttack(
   const { board } = stateManager.getClient(clientId);
 
   const randCoord: Hit = getRandomShot(board, BOARD_SIZE);
-
-  console.log('randomcoord=', randCoord);
 
   const { missed, shoted, killed, isGameOver } = checkHit(
     opponentId,

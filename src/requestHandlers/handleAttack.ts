@@ -1,12 +1,5 @@
 import WebSocket from 'ws';
-import {
-  AttackRequest,
-  RoomRequest,
-  Room,
-  Hit,
-  AttackFeedback,
-} from '../utils/types';
-import { randomUUID } from 'crypto';
+import { AttackRequest, Hit, AttackFeedback } from '../utils/types';
 import { getFormattedResponse } from '../utils/helpers/getFormattedResponse';
 import { stateManager } from '../state/clientManager';
 import { getOpponentData } from '../utils/helpers/getOpponentData';
