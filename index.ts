@@ -19,8 +19,8 @@ httpServer.listen(HTTP_PORT);
 const wss = new WebSocketServer({ port: WS_PORT });
 
 wss.on('connection', (ws) => {
-  console.log('ws connection');
   const clientId = randomUUID();
+  console.log(`ws client connection with id ${clientId} opened`);
 
   ws.on('message', (message: string) => {
     const parsedMessage = JSON.parse(message) as ParsedMessage;
@@ -57,9 +57,17 @@ wss.on('connection', (ws) => {
 
   ws.on('close', () => {
     stateManager.removeClient(clientId);
+    console.log(`ws client connection with id ${clientId} closed`);
   });
 });
 
 wss.on('listening', () => {
   console.log(`WebSocket server is running on port ${WS_PORT}`);
+});
+
+process.on('SIGINT', () => {
+  wss.close(() => {
+    console.log('WebSocket server is closed');
+    process.exit(0);
+  });
 });
