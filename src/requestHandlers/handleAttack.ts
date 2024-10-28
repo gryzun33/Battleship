@@ -105,6 +105,7 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   opponentWs.send(response);
 
   if (isGameOver) {
-    sendFinish(clientId, opponentId, ws, opponentWs);
+    stateManager.addWin(clientId);
+    sendFinish(clientId, opponentId, ws, opponentWs, attackData.gameId);
   }
 }

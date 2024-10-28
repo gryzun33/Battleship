@@ -18,7 +18,7 @@ export function handleAddUserToRoom(
   }
 
   const wsInRoom = stateManager.getWebSocket(clientIdInRoom);
-  stateManager.removeRoom(indexRoom);
+  stateManager.removeRoom(indexRoom, clientIdInRoom);
 
   // response1
   const rooms: Room[] = stateManager.getRooms();
@@ -29,8 +29,6 @@ export function handleAddUserToRoom(
 
   // createGame
   const gameId = randomUUID();
-
-  // add room to clients
   stateManager.updateClient(clientIdInRoom, { gameId });
   stateManager.updateClient(clientId, { gameId });
 

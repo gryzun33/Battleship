@@ -107,3 +107,10 @@ export type ShipCoord = {
 };
 
 export type Board = Map<string, boolean>;
+
+export type WinnerData = {
+  name: string;
+  wins: number;
+};
+
+export type WinnersData = WinnerData[];

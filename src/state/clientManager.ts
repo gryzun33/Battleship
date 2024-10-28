@@ -6,14 +6,14 @@ import {
   PlayerReg,
   ShipCoord,
   Board,
-  Coord,
+  WinnersData,
 } from '../utils/types';
 
 interface ClientData {
   ws: WebSocket;
   name: string;
-  roomId?: string;
-  gameId?: string;
+  roomId: string | null;
+  gameId?: string | null;
   board: Board;
   shipsCoord?: ShipCoord[];
 }
@@ -23,19 +23,31 @@ class StateManager {
   private clients: Map<string, ClientData> = new Map();
   private roomsMap: Map<string, Room> = new Map();
   private games: Map<string, GameSession> = new Map();
+  private winners: Map<string, number> = new Map();
 
-  public login(data: PlayerReg): boolean {
-    const isExist = this.users.has(data.name);
-    if (isExist) {
-      const storedPassword = this.users.get(data.name);
-      if (storedPassword === data.password) {
-        return true;
-      } else {
-        return false;
-      }
+  public login(data: PlayerReg): { isSuccess: boolean; errorText: string } {
+    const names: string[] = [];
+    for (const client of this.clients.values()) {
+      names.push(client.name);
+    }
+    if (names.includes(data.name)) {
+      return {
+        isSuccess: false,
+        errorText: `User with name "${data.name}" is already logged in.`,
+      };
     } else {
-      this.users.set(data.name, data.password);
-      return true;
+      const isExist = this.users.has(data.name);
+      if (isExist) {
+        const storedPassword = this.users.get(data.name);
+        if (storedPassword === data.password) {
+          return { isSuccess: true, errorText: '' };
+        } else {
+          return { isSuccess: false, errorText: 'Wrong password' };
+        }
+      } else {
+        this.users.set(data.name, data.password);
+        return { isSuccess: true, errorText: '' };
+      }
     }
   }
 
@@ -113,8 +125,10 @@ class StateManager {
     return room.roomUsers[0].index;
   }
 
-  public removeRoom(roomId: string): void {
+  public removeRoom(roomId: string, clientId: string): void {
     this.roomsMap.delete(roomId);
+    const clientData = this.getClient(clientId);
+    clientData.roomId = null;
   }
 
   public addPlayerToGame({
@@ -129,6 +143,10 @@ class StateManager {
     }
     game.players.set(indexPlayer, { ships, indexPlayer });
     return game.players.size;
+  }
+
+  public deleteGame(gameId: string): boolean {
+    return this.games.delete(gameId);
   }
 
   public getGameData(gameId: string): GameSession {
@@ -163,6 +181,27 @@ class StateManager {
     } else {
       throw new Error('Cell not found on the board');
     }
+  }
+
+  public addWin(clientId: string): void {
+    const { name } = this.getClient(clientId);
+
+    if (this.winners.has(name)) {
+      const currentWins = this.winners.get(name)!;
+      this.winners.set(name, currentWins + 1);
+    } else {
+      this.winners.set(name, 1);
+    }
+  }
+
+  public getWinners(): WinnersData {
+    const winnersArray: WinnersData = [];
+
+    this.winners.forEach((wins, name) => {
+      winnersArray.push({ name, wins });
+    });
+
+    return winnersArray;
   }
 }
 
