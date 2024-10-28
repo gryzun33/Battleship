@@ -213,6 +213,17 @@ class StateManager {
 
     return winnersArray;
   }
+
+  public getRoomId(userName: string): string | null {
+    for (const [roomId, room] of this.roomsMap.entries()) {
+      const userInRoom = room.roomUsers.find((user) => user.name === userName);
+
+      if (userInRoom) {
+        return roomId;
+      }
+    }
+    return null;
+  }
 }
 
 export const stateManager = new StateManager();

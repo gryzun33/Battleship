@@ -38,7 +38,7 @@ export function handleRegistration(
     ws,
     name: parsedData.name,
     board: createBoard(BOARD_SIZE),
-    roomId: null,
+    roomId: stateManager.getRoomId(parsedData.name),
   });
 
   const sockets = stateManager.getAllSockets();
