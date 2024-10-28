@@ -20,6 +20,12 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   if (!anotherPlayer) {
     throw new Error(`opponent wasn't found`);
   }
+
+  if (stateManager.getCurrentPlayer() !== clientId) {
+    console.warn(`Now is another player's turn`);
+    return;
+  }
+
   const opponentId = anotherPlayer.indexPlayer;
   const { ws: opponentWs } = stateManager.getClient(opponentId);
 
@@ -98,7 +104,7 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   } else {
     turnData.currentPlayer = opponentId;
   }
-
+  stateManager.setCurrentPlayer(turnData.currentPlayer);
   const turnResponseJSON = JSON.stringify(turnData);
   const response = getFormattedResponse('turn', turnResponseJSON);
   ws.send(response);

@@ -35,23 +35,6 @@ export function handleRandomAttack(
 
   console.log('randomcoord=', randCoord);
 
-  // const isCellnotHit = stateManager.checkCell(
-  //   opponentId,
-  //   attackData.x,
-  //   attackData.y
-  // );
-
-  // if (!isCellnotHit) {
-  //   console.warn(`This cell is not available`);
-  //   const turnResponseJSON = JSON.stringify({ currentPlayer: clientId });
-  //   const response = getFormattedResponse('turn', turnResponseJSON);
-  //   ws.send(response);
-  //   opponentWs.send(response);
-  //   return;
-  // } else {
-  //   stateManager.updateCell(opponentId, attackData.x, attackData.y);
-  // }
-
   const { missed, shoted, killed, isGameOver } = checkHit(
     opponentId,
     randCoord.x,

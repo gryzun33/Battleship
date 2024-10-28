@@ -29,6 +29,8 @@ export function handleAddShips(ws: WebSocket, data: string, clientId: string) {
   console.log('startgame');
 
   const { players, currentPlayer } = stateManager.getGameData(shipsData.gameId);
+
+  stateManager.setCurrentPlayer(currentPlayer);
   players.forEach((playerData: PlayerData, playerId: string) => {
     const ws = stateManager.getWebSocket(playerId);
     const playerDataResponse = {

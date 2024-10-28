@@ -25,6 +25,16 @@ class StateManager {
   private games: Map<string, GameSession> = new Map();
   private winners: Map<string, number> = new Map();
 
+  private currentUser: string = '';
+
+  public getCurrentPlayer(): string {
+    return this.currentUser;
+  }
+
+  public setCurrentPlayer(id: string): void {
+    this.currentUser = id;
+  }
+
   public login(data: PlayerReg): { isSuccess: boolean; errorText: string } {
     const names: string[] = [];
     for (const client of this.clients.values()) {
