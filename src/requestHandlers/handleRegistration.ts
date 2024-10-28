@@ -20,7 +20,7 @@ export function handleRegistration(
       error: true,
       errorText,
     };
-
+    // console.log('SEND');
     const createdPlayerJSON = JSON.stringify(createdPlayer);
     const responseReg = getFormattedResponse('reg', createdPlayerJSON);
     console.log('response type = reg');
