@@ -15,8 +15,7 @@ export async function sendFinish(
   const responseData = { winPlayer: winnerId };
   const responseJSON = JSON.stringify(responseData);
   const response = getFormattedResponse('finish', responseJSON);
-  // ws.send(response);
-  // opponentWs.send(response);
+  console.log('response type = finish');
   await Promise.all([ws.send(response), opponentWs.send(response)]);
 
   // response2
@@ -24,7 +23,7 @@ export async function sendFinish(
   const winners: WinnersData = stateManager.getWinners();
   const winnersJSON = JSON.stringify(winners);
   const responseWinners = getFormattedResponse('update_winners', winnersJSON);
-  // sockets.forEach((ws) => ws.send(responseWinners));
+  console.log('response type = update_winners');
   await Promise.all(sockets.map((socket) => socket.send(responseWinners)));
 
   resetGame(winnerId, opponentId, gameId);

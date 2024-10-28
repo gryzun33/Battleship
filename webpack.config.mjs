@@ -6,7 +6,7 @@ const __dirname = dirname(__filename);
 
 const config = {
   mode: 'production',
-  entry: './src/index.ts',
+  entry: './index.ts',
   target: 'node',
   output: {
     filename: 'bundle.js',

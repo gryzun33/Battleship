@@ -31,6 +31,7 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   if (!isCellnotHit) {
     console.warn(`This cell is not available`);
     const turnResponseJSON = JSON.stringify({ currentPlayer: clientId });
+    console.log('response type = turn');
     const response = getFormattedResponse('turn', turnResponseJSON);
     ws.send(response);
     opponentWs.send(response);
@@ -86,6 +87,7 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
 
   responsesAttack.forEach((resp: AttackFeedback) => {
     const responseJSON = JSON.stringify(resp);
+    console.log('response type = attack');
     const response = getFormattedResponse('attack', responseJSON);
     ws.send(response);
     opponentWs.send(response);
@@ -100,6 +102,7 @@ export function handleAttack(ws: WebSocket, data: string, clientId: string) {
   stateManager.setCurrentPlayer(turnData.currentPlayer);
   const turnResponseJSON = JSON.stringify(turnData);
   const response = getFormattedResponse('turn', turnResponseJSON);
+  console.log('response type = turn');
   ws.send(response);
   opponentWs.send(response);
 

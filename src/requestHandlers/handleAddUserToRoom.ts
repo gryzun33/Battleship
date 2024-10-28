@@ -25,7 +25,10 @@ export function handleAddUserToRoom(
   const roomsJSON = JSON.stringify(rooms);
   const response = getFormattedResponse('update_room', roomsJSON);
   const sockets = stateManager.getAllSockets();
-  sockets.forEach((ws) => ws.send(response));
+  sockets.forEach((ws) => {
+    console.log('response type = update_room');
+    ws.send(response);
+  });
 
   // createGame
   const gameId = randomUUID();
@@ -39,6 +42,7 @@ export function handleAddUserToRoom(
   };
   const playerOne = JSON.stringify(gameOne);
   const responseOne = getFormattedResponse('create_game', playerOne);
+  console.log('response type = create_game');
   wsInRoom.send(responseOne);
 
   const gameTwo: GameResponse = {
@@ -47,5 +51,6 @@ export function handleAddUserToRoom(
   };
   const playerTwo = JSON.stringify(gameTwo);
   const responseTwo = getFormattedResponse('create_game', playerTwo);
+  console.log('response type = create_game');
   ws.send(responseTwo);
 }

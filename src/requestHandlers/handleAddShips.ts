@@ -16,7 +16,6 @@ export function handleAddShips(ws: WebSocket, data: string, clientId: string) {
   if (playersCount < 2) {
     return;
   }
-  // console.log('startgame');
 
   const { players, currentPlayer } = stateManager.getGameData(shipsData.gameId);
 
@@ -32,7 +31,9 @@ export function handleAddShips(ws: WebSocket, data: string, clientId: string) {
     const currentJSON = JSON.stringify({ currentPlayer });
     const responseGame = getFormattedResponse('start_game', dataJSON);
     const responseTurn = getFormattedResponse('turn', currentJSON);
+    console.log('response type = start_game');
     ws.send(responseGame);
+    console.log('response type = turn');
     ws.send(responseTurn);
   });
 }

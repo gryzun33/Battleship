@@ -17,5 +17,8 @@ export function handleCreateRoom(clientId: string) {
   const roomsJSON = JSON.stringify(rooms);
   const response = getFormattedResponse('update_room', roomsJSON);
   const sockets = stateManager.getAllSockets();
-  sockets.forEach((ws) => ws.send(response));
+  sockets.forEach((ws) => {
+    console.log('response type = update_room');
+    ws.send(response);
+  });
 }

@@ -73,6 +73,7 @@ export function handleRandomAttack(
   responsesAttack.forEach((resp: AttackFeedback) => {
     const responseJSON = JSON.stringify(resp);
     const response = getFormattedResponse('attack', responseJSON);
+    console.log('response type = attack');
     ws.send(response);
     opponentWs.send(response);
   });
@@ -86,7 +87,9 @@ export function handleRandomAttack(
 
   const turnResponseJSON = JSON.stringify(turnData);
   const response = getFormattedResponse('turn', turnResponseJSON);
+  console.log('response type = turn');
   ws.send(response);
+  console.log('response type = turn');
   opponentWs.send(response);
 
   if (isGameOver) {

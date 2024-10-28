@@ -23,6 +23,7 @@ export function handleRegistration(
 
     const createdPlayerJSON = JSON.stringify(createdPlayer);
     const responseReg = getFormattedResponse('reg', createdPlayerJSON);
+    console.log('response type = reg');
     ws.send(responseReg);
     return;
   }
@@ -46,17 +47,25 @@ export function handleRegistration(
 
   const createdPlayerJSON = JSON.stringify(createdPlayer);
   const responseReg = getFormattedResponse('reg', createdPlayerJSON);
+  console.log('response type = reg');
   ws.send(responseReg);
 
   // response2
   const winners: WinnersData = stateManager.getWinners();
   const winnersJSON = JSON.stringify(winners);
   const responseWinners = getFormattedResponse('update_winners', winnersJSON);
-  sockets.forEach((ws) => ws.send(responseWinners));
+
+  sockets.forEach((ws) => {
+    console.log('response type = update_winners');
+    ws.send(responseWinners);
+  });
 
   // response3
   const rooms: Room[] = stateManager.getRooms();
   const roomsJSON = JSON.stringify(rooms);
   const responseRooms = getFormattedResponse('update_room', roomsJSON);
-  sockets.forEach((ws) => ws.send(responseRooms));
+  sockets.forEach((ws) => {
+    console.log('response type = update_room');
+    ws.send(responseRooms);
+  });
 }
