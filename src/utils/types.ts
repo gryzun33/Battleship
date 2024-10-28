@@ -9,7 +9,8 @@ export type MessageType =
   | 'start_game'
   | 'turn'
   | 'attack'
-  | 'finish';
+  | 'finish'
+  | 'randomAttack';
 
 export type PlayerReg = {
   name: string;
@@ -83,6 +84,11 @@ export type AttackRequest = {
   gameId: string;
   x: number;
   y: number;
+  indexPlayer: string;
+};
+
+export type AttackRandom = {
+  gameId: string;
   indexPlayer: string;
 };
 

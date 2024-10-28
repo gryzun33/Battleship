@@ -17,7 +17,7 @@ const BOARD_SIZE = 10;
 export function handleAddShips(ws: WebSocket, data: string, clientId: string) {
   const shipsData = JSON.parse(data) as ShipsInitialData;
 
-  console.log('shipsData.ships=', shipsData.ships);
+  // console.log('shipsData.ships=', shipsData.ships);
 
   const shipsCoord = getShipPositions(shipsData.ships);
   stateManager.updateClient(clientId, { shipsCoord });

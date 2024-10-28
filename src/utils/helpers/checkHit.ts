@@ -21,6 +21,7 @@ export function checkHit(opponentId: string, xHit: number, yHit: number) {
 
       if (pos.x === xHit && pos.y === yHit) {
         pos.isHit = true;
+        stateManager.updateCell(opponentId, xHit, yHit);
 
         const isKilled = ship.positions.every((pos: Coord) => pos.isHit);
         if (isKilled) {
@@ -81,6 +82,7 @@ export function checkHit(opponentId: string, xHit: number, yHit: number) {
 
   if (killed.length === 0 && shoted.length === 0) {
     missed.push({ x: xHit, y: yHit });
+    stateManager.updateCell(opponentId, xHit, yHit);
   }
 
   return { missed, shoted, killed, isGameOver };

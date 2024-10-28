@@ -8,6 +8,7 @@ import { handleCreateRoom } from './src/requestHandlers/handleCreateRoom';
 import { handleAddUserToRoom } from './src/requestHandlers/handleAddUserToRoom';
 import { handleAddShips } from './src/requestHandlers/handleAddShips';
 import { handleAttack } from './src/requestHandlers/handleAttack';
+import { handleRandomAttack } from './src/requestHandlers/handleRandomAttack';
 
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
@@ -22,11 +23,10 @@ wss.on('connection', (ws) => {
   const clientId = randomUUID();
 
   ws.on('message', (message: string) => {
-    // console.log(`getMessage: ${message}`);
     const parsedMessage = JSON.parse(message) as ParsedMessage;
 
     const { type, data } = parsedMessage;
-    console.log('type=', type);
+    console.log('request type = ', type);
     switch (type) {
       case 'reg':
         handleRegistration(ws, data, clientId);
@@ -43,7 +43,9 @@ wss.on('connection', (ws) => {
       case 'attack':
         handleAttack(ws, data, clientId);
         break;
-
+      case 'randomAttack':
+        handleRandomAttack(ws, data, clientId);
+        break;
       default:
         console.warn('Unknown message type:', type);
     }
