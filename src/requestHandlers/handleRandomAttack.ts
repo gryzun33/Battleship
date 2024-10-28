@@ -84,7 +84,7 @@ export function handleRandomAttack(
   } else {
     turnData.currentPlayer = opponentId;
   }
-
+  stateManager.setCurrentPlayer(turnData.currentPlayer);
   const turnResponseJSON = JSON.stringify(turnData);
   const response = getFormattedResponse('turn', turnResponseJSON);
   console.log('response type = turn');
