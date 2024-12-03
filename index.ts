@@ -65,21 +65,4 @@ wss.on('listening', () => {
   console.log(`WebSocket server is running on port ${WS_PORT}`);
 });
 
-// const closeProgram = async () => {
-//   const closePromises = [...wss.clients].map((client) => {
-//     return new Promise<void>((resolve) => {
-//       client.close(1000);
 
-//       resolve();
-//     });
-//   });
-
-//   await Promise.all(closePromises);
-
-//   wss.close(() => {
-//     console.log('WebSocket server closed');
-//     process.exit(0);
-//   });
-// };
-
-// process.on('SIGINT', closeProgram);
